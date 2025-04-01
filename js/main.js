@@ -4,8 +4,13 @@ const taskInput = document.querySelector('#taskInput');
 const tasksList = document.querySelector('#tasksList');
 const emptyList = document.querySelector('#emptyList');
 const checkAllBtn = document.querySelector('#ckeckAllBtn');
+const clearCmplBtn = document.querySelector('#clearCmplBtn');
+const showActiveBtn = document.querySelector('#showActiveBtn');
+const showAllBtn = document.querySelector('#showAllBtn');
+const showCmplBtn = document.querySelector('#showCmplBtn');
 
 let tasks = [];
+let flag = 1;
 
 if (localStorage.getItem('tasks')) {
   tasks = JSON.parse(localStorage.getItem('tasks'));
@@ -18,6 +23,11 @@ form.addEventListener('submit', addTask);
 tasksList.addEventListener('click', deleteTask);
 tasksList.addEventListener('click', doneTask);
 checkAllBtn.addEventListener('click', checkAllTasks);
+clearCmplBtn.addEventListener('click', delAllDoneTasks);
+showAllBtn.addEventListener('click', showAllTasks);
+showActiveBtn.addEventListener('click', showActiveTasks);
+showCmplBtn.addEventListener('click', showDoneTasks);
+
 
 // Функции
 function addTask(event) {
@@ -126,8 +136,6 @@ function renderTask(task) {
   tasksList.insertAdjacentHTML('beforeend', taskHtml);
 }
 
-let flag = 1;
-
 function checkAllTasks() {
   tasks = JSON.parse(localStorage.getItem('tasks'));
   const allTasks = document.querySelectorAll('.task-title');
@@ -153,6 +161,42 @@ function checkAllTasks() {
   }
   // Сохраняем список задач в localStorage
   saveToLocalStorage();
+}
+
+function delAllDoneTasks() {
+tasks = JSON.parse(localStorage.getItem('tasks'));
+const allTasks = document.querySelectorAll('.task-title');
+
+//получаю массив выполненных задач
+doneTasks = tasks.filter((el) => el.done === true);
+
+//актуализирую верстку
+doneTasks.forEach(function (a) {
+  allTasks.forEach( function(b) {
+    if (a.id == b.closest('.list-group-item').id) {
+      b.closest('.list-group-item').remove()
+    }
+    return;
+  })
+})
+
+//фильтруем актуальные таски
+tasks = tasks.filter((el) => el.done === false);
+
+//сохраняем список задач в localStorage
+saveToLocalStorage();
+}
+
+function showAllTasks() {
+  console.log("showAllTasks is active");
+}
+
+function showActiveTasks() {
+  console.log("showActiveTasks is active");
+}
+
+function showDoneTasks() {
+  console.log("showDoneTasks is active");
 }
 
 function saveToLocalStorage() {
